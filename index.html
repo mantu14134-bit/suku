@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Sudoku</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="background-canvas"></canvas>
+
+    <!-- Animated Character -->
+    <div id="character-container">
+        <div id="animated-character">
+            <div class="character-body">
+                <div class="character-number">:)</div>
+                <div class="character-face">
+                    <div class="eye-container">
+                        <div class="eye"><div class="pupil"></div></div>
+                        <div class="eye"><div class="pupil"></div></div>
+                    </div>
+                    
+                    <div class="nose"></div>
+                    <div class="mouth"></div>
+                </div>
+            </div>
+        </div>
+        <div class="character-shadow"></div>
+    </div>
+
+    <!-- Hint Sprite -->
+    <div id="hint-sprite" class="hidden">
+        <div class="eye"></div>
+        <div class="eye"></div>
+    </div>
+
+    <header class="top-header">
+        <h1 class="logo">Sudoku</h1>
+        <nav class="main-nav">
+            <a href="#" id="about-us-link">About Us</a>
+            <a href="#" id="contact-us-link">Contact Us</a>
+            <a href="#" id="rules-link">Rules</a>
+            <a href="#" id="themes-link">Themes</a>
+            <a href="#" id="themes-link">ASwards</a>
+        </nav>
+    </header>
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="active">
+        <div id="start-preview-pane">
+            <div class="preview-grid"></div>
+            <div id="best-times-display"></div>
+        </div>
+        <div class="start-controls">
+            <h2 class="title-gradient">Welcome</h2>
+            <p>Select a difficulty to begin the challenge.</p>
+            <div id="start-difficulty-selector">
+                <button data-level="easy" class="difficulty-level active">Easy</button>
+                <button data-level="medium" class="difficulty-level">Medium</button>
+                <button data-level="hard" class="difficulty-level">Hard</button>
+                <button data-level="very-hard" class="difficulty-level">Very Hard</button>
+                <button data-level="expert" class="difficulty-level">Expert</button>
+            </div>
+            <button id="start-game-btn">Start Game</button>
+        </div>
+    </div>
+
+    <!-- Main Game Area -->
+    <main id="game-container">
+        <section id="board-container">
+            <div id="board"></div>
+            <div id="pause-overlay" class="hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M14,19H18V5H14M6,19H10V5H6V19Z" /></svg>
+                <span>Paused</span>
+            </div>
+            <button id="new-game-btn">New Game</button>
+        </section>
+        <aside id="controls-container">
+             <div class="stat-item">
+                <span class="stat-title">Difficulty</span>
+                <span id="difficulty-display">Easy</span>
+            </div>
+             <div class="stat-item">
+                <span class="stat-title">Mistakes</span>
+                <span id="mistakes-display">0 / 3</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-title">Time</span>
+                <span id="timer">00:00</span>
+            </div>
+            <div id="action-controls" class="action-icons">
+                 <button id="pause-btn" class="action-btn" title="Pause Game"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M13,16V8H15V16H13M9,16V8H11V16H9Z" /></svg></button>
+                <button id="erase-btn" class="action-btn" title="Erase" aria-label="Erase selected tile"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19,19H5V5H19M19,3H5A2,2 0 0,0 3,5V19A2,2 0 0,0 5,21H19A2,2 0 0,0 21,19V5A2,2 0 0,0 19,3M16.5,13.5L13,10L9.5,13.5L8.5,12.5L12,9L8.5,5.5L9.5,4.5L13,8L16.5,4.5L17.5,5.5L14,9L17.5,12.5L16.5,13.5Z" /></svg></button>
+                <button id="notes-btn" class="action-btn" title="Toggle Notes" aria-label="Toggle notes mode"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.71,7.04C21.1,6.65 21.1,6 20.71,5.63L18.37,3.29C18,2.9 17.35,2.9 16.96,3.29L15.13,5.12L18.88,8.87M3,17.25V21H6.75L17.81,9.94L14.06,6.19L3,17.25Z" /></svg></button>
+                <button id="hint-btn" class="action-btn" title="Get a hint" aria-label="Get a hint"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12,2A7,7 0 0,0 5,9C5,11.38 6.19,13.47 8,14.74V17A1,1 0 0,0 9,18H15A1,1 0 0,0 16,17V14.74C17.81,13.47 19,11.38 19,9A7,7 0 0,0 12,2M9,21A1,1 0 0,0 10,22H14A1,1 0 0,0 15,21V20H9V21Z" /></svg><span id="hint-badge">3</span></button>
+            </div>
+            <div id="digits"></div>
+        </aside>
+    </main>
+ <!-- Modals -->
+    <div id="modal-backdrop" class="modal-hidden">
+        <canvas id="celebration-canvas"></canvas>
+        <div id="themes-modal" class="modal">
+            <button class="close-button" aria-label="Close themes dialog">×</button>
+            <h2>Select a Theme</h2>
+            <div id="theme-options-container"></div>
+        </div>
+        <div id="about-us-modal" class="modal">
+            <button class="close-button" aria-label="Close about us dialog">×</button>
+            <h2>About This Game</h2>
+            <p>This Sudoku game was created to provide a clean, modern, and enjoyable puzzle experience.</p>
+        </div>
+        <div id="contact-us-modal" class="modal">
+            <button class="close-button" aria-label="Close contact us dialog">×</button>
+            <h2>Contact & Feedback</h2>
+            <p>Please reach out to our team at: <a href="mailto:feedback@sudokugame.com">feedback@sudokugame.com</a>.</p>
+        </div>
+        <!-- UPDATED RULES MODAL -->
+        <div id="rules-modal" class="modal">
+            <button class="close-button" aria-label="Close rules dialog">×</button>
+            <h2>Sudoku Rules</h2>
+            <h3>The Basics</h3>
+            <p>The goal is to fill the 9×9 grid so that each row, column, and 3×3 block contains all digits from 1 to 9 exactly once.</p>
+            <ol>
+                <li><strong>No Repeats in Rows:</strong> Every horizontal line must have all numbers from 1-9.</li>
+                <li><strong>No Repeats in Columns:</strong> Every vertical line must have all numbers from 1-9.</li>
+                <li><strong>No Repeats in Blocks:</strong> Every 3×3 block must have all numbers from 1-9.</li>
+            </ol>
+            <h3>How to Play</h3>
+            <p>Use the process of elimination. Look at the existing numbers to deduce which numbers can go in the empty cells. Harder puzzles require more advanced logical techniques.</p>
+        </div>
+        <div id="win-modal" class="modal">
+            <button class="close-button" aria-label="Close congratulations dialog">×</button>
+            <h2 class="title-gradient">Congratulations!</h2>
+            <p>You solved the puzzle!</p>
+            <p>Your time was: <strong id="win-time"></strong></p>
+            <button id="play-again-btn">Play Again</button>
+        </div>
+        <div id="game-over-modal" class="modal">
+            <h2>Game Over</h2>
+            <p>You've made 3 mistakes. Restarting...</p>
+        </div>
+    </div>
+
+    <!-- Corrected Audio Sources -->
+    <audio id="win-sound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_2b68d4a7c1.mp3" preload="auto"></audio>
+    <audio id="lose-sound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_c39194a050.mp3" preload="auto"></audio>
+    <audio id="mistake-sound" src="https://cdn.pixabay.com/audio/2022/03/10/audio_c6f2890a55.mp3" preload="auto"></audio>
+    <audio id="hint-sound" src="https://cdn.pixabay.com/audio/2022/11/17/audio_88f117c736.mp3" preload="auto"></audio>
+    
+    <script src="puzzles.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
